@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <title>Balloon Order page - Welcome and choose a Balloon</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>Welcome to our Balloon Shop App</h1>
+
+</header>
+<h2>Choose balloon here</h2>
+
+<form th:action="${'/balloons/save'}" th:method="post">
+
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Manufacturer</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="b : ${balloons}">
+            <div class="balloon-items">
+            <td>
+                <input type="radio" name="id" th:value="${b.getId()}"/>
+            </td>
+            <td th:text="${b.getName()}"></td>
+            <td th:text="${b.getDescription()}"></td>
+            <td th:text="${b.getManufacturer() !=null} ? ${b.getManufacturer().getName()} :  'None'"></td>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+    <button type="submit" class="submit-order" sec:authorize="isAuthenticated()">Submit</button>
+</form>
+<div class="add-new-balloon" sec:authorize="hasRole('ROLE_ADMIN')">
+    <a href="/balloons/add-form" >Add new balloon</a>
+</div>
+<h2>Edit/delete balloon choices here</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Manufacturer</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="b : ${balloons}">
+        <td th:text="${b.getName()}"></td>
+        <td th:text="${b.getDescription()}"></td>
+        <td th:text="${b.getManufacturer() !=null} ? ${b.getManufacturer().getName()} :  'None'"></td>
+        <th class="delete-balloon" sec:authorize="hasRole('ROLE_ADMIN')">
+            <form th:method="delete" th:action="@{'/balloons/delete/{id}' (id=${b.getId()}) }">
+                <button name="delete-button" type="submit">Delete</button>
+            </form>
+        <th class="edit-balloon" sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{'/balloons/edit-form/{id}' (id=${b.getId()})}">Edit</a>
+        </th>
+
+        </th>
+    </tr>
+    </tbody>
+</table>
+<br>
+
+
+<th:block th:if="${hasError}">
+    <div th:text="${error}"></div>
+</th:block>
+</body>
+</html>

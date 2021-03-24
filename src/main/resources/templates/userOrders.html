@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<!DOCTYPE html><html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User orders</title>
+</head>
+<body>
+<h3>Orders:</h3>
+<table>
+    <thead>
+    <tr>
+        <th scope="col">Color</th>
+        <th scope="col">Client</th>
+        <th scope="col">Address</th>
+    </tr>
+    </thead>
+    <tbody th:if="${orders}">
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.getBalloonColor()}"></td>
+        <td th:text="${order.getUser().getUsername()}"></td><br>
+    </tr>
+    </tbody>
+
+</table>
+
+
+</body>
+</html>
